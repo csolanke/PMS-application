@@ -13,17 +13,7 @@ public class ClientDetailsDTO {
     private double clientPortfolioAmount;
 
     public ClientDetailsDTO() {
-    }
-
-    public ClientDetailsDTO(int clientId, String clientName, String clientEmailId, String clientAddress, String clientBrokerAccountName, Date pmsPurchasedDate, String paymentMode, double clientPortfolioAmount) {
-        this.clientId = clientId;
-        this.clientName = clientName;
-        this.clientEmailId = clientEmailId;
-        this.clientAddress = clientAddress;
-        this.clientBrokerAccountName = clientBrokerAccountName;
-        this.pmsPurchasedDate = pmsPurchasedDate;
-        this.paymentMode = paymentMode;
-        this.clientPortfolioAmount = clientPortfolioAmount;
+        super();
     }
 
     public int getClientId() {
