@@ -48,6 +48,6 @@ public class PMSController {
         for (ClientDetails clientDetail : clientDetails) {
             dtoList.add(mapper.clientDetailsEntityToDto(clientDetail));
         }
-        return new ResponseEntity(dtoList,HttpStatus.OK);
+        return new ResponseEntity<>(dtoList,HttpStatus.OK);
     }
 }
