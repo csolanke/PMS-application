@@ -1,10 +1,16 @@
 package com.cds.org.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.lang.reflect.GenericArrayType;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 public class ClientDetails {
@@ -16,9 +22,21 @@ public class ClientDetails {
     private String clientEmailId;
     private String clientAddress;
     private String clientBrokerAccountName;
-    private Date pmsPurchasedDate;
+
+
+    private LocalDate pmsPurchasedDate;
+
+    public LocalDate getPmsPurchasedDate() {
+        return pmsPurchasedDate;
+    }
+
+    public void setPmsPurchasedDate(LocalDate pmsPurchasedDate) {
+        this.pmsPurchasedDate = pmsPurchasedDate;
+    }
+
     private String paymentMode;
     private double clientPortfolioAmount;
+
 
     public ClientDetails() {
     }
@@ -63,13 +81,7 @@ public class ClientDetails {
         this.clientBrokerAccountName = clientBrokerAccountName;
     }
 
-    public Date getPmsPurchasedDate() {
-        return pmsPurchasedDate;
-    }
 
-    public void setPmsPurchasedDate(Date pmsPurchasedDate) {
-        this.pmsPurchasedDate = pmsPurchasedDate;
-    }
 
     public String getPaymentMode() {
         return paymentMode;
@@ -86,4 +98,6 @@ public class ClientDetails {
     public void setClientPortfolioAmount(double clientPortfolioAmount) {
         this.clientPortfolioAmount = clientPortfolioAmount;
     }
+
+
 }

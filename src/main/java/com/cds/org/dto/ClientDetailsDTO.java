@@ -1,6 +1,10 @@
 package com.cds.org.dto;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+import java.time.LocalDate;
 
 public class ClientDetailsDTO {
     private int clientId;
@@ -8,7 +12,9 @@ public class ClientDetailsDTO {
     private String clientEmailId;
     private String clientAddress;
     private String clientBrokerAccountName;
-    private Date pmsPurchasedDate;
+
+
+    private LocalDate pmsPurchasedDate;
     private String paymentMode;
     private double clientPortfolioAmount;
 
@@ -56,11 +62,11 @@ public class ClientDetailsDTO {
         this.clientBrokerAccountName = clientBrokerAccountName;
     }
 
-    public Date getPmsPurchasedDate() {
+    public LocalDate getPmsPurchasedDate() {
         return pmsPurchasedDate;
     }
 
-    public void setPmsPurchasedDate(Date pmsPurchasedDate) {
+    public void setPmsPurchasedDate(LocalDate pmsPurchasedDate) {
         this.pmsPurchasedDate = pmsPurchasedDate;
     }
 
