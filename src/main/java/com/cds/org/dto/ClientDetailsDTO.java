@@ -8,8 +8,6 @@ public class ClientDetailsDTO {
     private String clientEmailId;
     private String clientAddress;
     private String clientBrokerAccountName;
-
-
     private LocalDate pmsPurchasedDate;
     private String paymentMode;
     private double clientPortfolioAmount;

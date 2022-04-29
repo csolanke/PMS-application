@@ -1,11 +1,11 @@
 package com.cds.org.controller;
 
 
+import com.cds.org.computation.DetermineTotalFundForPMS;
 import com.cds.org.dto.ClientDetailsDTO;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
-import com.cds.org.service.PMSService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cds.org.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +21,15 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/api/v1/")
 public class PMSController {
 
-    @Autowired
-    private PMSService service;
-
-    @Autowired
+    private ClientService service;
     private PMSMapper mapper;
+    private DetermineTotalFundForPMS determineTotalFundForPMS;
+
+    public PMSController(ClientService service,PMSMapper mapper,DetermineTotalFundForPMS determineTotalFundForPMS)
+    {  this.service = service;
+        this.mapper = mapper;
+        this.determineTotalFundForPMS = determineTotalFundForPMS;
+    }
 
     @PostMapping("/client")
     public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody ClientDetailsDTO dto)
@@ -49,5 +53,14 @@ public class PMSController {
             dtoList.add(mapper.clientDetailsEntityToDto(clientDetail));
         }
         return new ResponseEntity<>(dtoList,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/fundValue")
+    public ResponseEntity<Double> getPMSTotalFundValue()
+    {
+        double calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
+
+        return new ResponseEntity<>(calculatedSum,HttpStatus.OK);
     }
 }
