@@ -3,13 +3,14 @@ package com.cds.org.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 @Entity
 public class PMSDetails {
     @Id
     @GeneratedValue
     private String fundManagerName;
-    private double totalFundValue;
+    private BigDecimal totalFundValue;
     private int numberOfClients;
 
     public PMSDetails() {
@@ -24,11 +25,11 @@ public class PMSDetails {
         this.fundManagerName = fundManagerName;
     }
 
-    public double getTotalFundValue() {
+    public BigDecimal getTotalFundValue() {
         return totalFundValue;
     }
 
-    public void setTotalFundValue(double totalFundValue) {
+    public void setTotalFundValue(BigDecimal totalFundValue) {
         this.totalFundValue = totalFundValue;
     }
 

@@ -1,9 +1,11 @@
 package com.cds.org.dto;
 
+import java.math.BigDecimal;
+
 public class PMSDetailsDTO {
 
     private String fundManagerName;
-    private double totalFundValue;
+    private BigDecimal totalFundValue;
     private int numberOfClients;
 
     public String getFundManagerName() {
@@ -14,11 +16,11 @@ public class PMSDetailsDTO {
         this.fundManagerName = fundManagerName;
     }
 
-    public double getTotalFundValue() {
+    public BigDecimal getTotalFundValue() {
         return totalFundValue;
     }
 
-    public void setTotalFundValue(double totalFundValue) {
+    public void setTotalFundValue(BigDecimal totalFundValue) {
         this.totalFundValue = totalFundValue;
     }
 

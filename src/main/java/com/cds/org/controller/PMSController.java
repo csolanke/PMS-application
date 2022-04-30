@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -57,10 +58,10 @@ public class PMSController {
 
 
     @GetMapping("/fundValue")
-    public ResponseEntity<Double> getPMSTotalFundValue()
+    public ResponseEntity<BigDecimal> getPMSTotalFundValue()
     {
-        double calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
+        BigDecimal calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
 
-        return new ResponseEntity<>(calculatedSum,HttpStatus.OK);
+        return new ResponseEntity<BigDecimal>(calculatedSum,HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.cds.org.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -16,6 +17,12 @@ public class ClientDetails {
     private String clientAddress;
     private String clientBrokerAccountName;
     private LocalDate pmsPurchasedDate;
+    private String paymentMode;
+    private BigDecimal clientPortfolioAmount;
+
+    public ClientDetails() {
+        //default constructor
+    }
 
     public LocalDate getPmsPurchasedDate() {
         return pmsPurchasedDate;
@@ -23,14 +30,6 @@ public class ClientDetails {
 
     public void setPmsPurchasedDate(LocalDate pmsPurchasedDate) {
         this.pmsPurchasedDate = pmsPurchasedDate;
-    }
-
-    private String paymentMode;
-    private double clientPortfolioAmount;
-
-
-    public ClientDetails() {
-        //default constructor
     }
 
     public int getClientId() {
@@ -73,8 +72,6 @@ public class ClientDetails {
         this.clientBrokerAccountName = clientBrokerAccountName;
     }
 
-
-
     public String getPaymentMode() {
         return paymentMode;
     }
@@ -83,11 +80,11 @@ public class ClientDetails {
         this.paymentMode = paymentMode;
     }
 
-    public double getClientPortfolioAmount() {
+    public BigDecimal getClientPortfolioAmount() {
         return clientPortfolioAmount;
     }
 
-    public void setClientPortfolioAmount(double clientPortfolioAmount) {
+    public void setClientPortfolioAmount(BigDecimal clientPortfolioAmount) {
         this.clientPortfolioAmount = clientPortfolioAmount;
     }
 

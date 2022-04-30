@@ -1,5 +1,6 @@
 package com.cds.org.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ClientDetailsDTO {
@@ -10,7 +11,7 @@ public class ClientDetailsDTO {
     private String clientBrokerAccountName;
     private LocalDate pmsPurchasedDate;
     private String paymentMode;
-    private double clientPortfolioAmount;
+    private BigDecimal clientPortfolioAmount;
 
     public ClientDetailsDTO() {
         super();
@@ -72,11 +73,11 @@ public class ClientDetailsDTO {
         this.paymentMode = paymentMode;
     }
 
-    public double getClientPortfolioAmount() {
+    public BigDecimal getClientPortfolioAmount() {
         return clientPortfolioAmount;
     }
 
-    public void setClientPortfolioAmount(double clientPortfolioAmount) {
+    public void setClientPortfolioAmount(BigDecimal clientPortfolioAmount) {
         this.clientPortfolioAmount = clientPortfolioAmount;
     }
 }
