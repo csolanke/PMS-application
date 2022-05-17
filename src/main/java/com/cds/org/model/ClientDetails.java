@@ -24,6 +24,17 @@ public class ClientDetails {
         //default constructor
     }
 
+    public ClientDetails(int clientId, String clientName, String clientEmailId, String clientAddress, String clientBrokerAccountName, LocalDate pmsPurchasedDate, String paymentMode, BigDecimal clientPortfolioAmount) {
+        this.clientId = clientId;
+        this.clientName = clientName;
+        this.clientEmailId = clientEmailId;
+        this.clientAddress = clientAddress;
+        this.clientBrokerAccountName = clientBrokerAccountName;
+        this.pmsPurchasedDate = pmsPurchasedDate;
+        this.paymentMode = paymentMode;
+        this.clientPortfolioAmount = clientPortfolioAmount;
+    }
+
     public LocalDate getPmsPurchasedDate() {
         return pmsPurchasedDate;
     }
