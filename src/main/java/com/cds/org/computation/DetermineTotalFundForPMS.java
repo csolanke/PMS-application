@@ -2,6 +2,7 @@ package com.cds.org.computation;
 
 import com.cds.org.model.ClientDetails;
 import com.cds.org.service.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.stream.StreamSupport;
 @Component
 public class DetermineTotalFundForPMS {
 
+    @Autowired
     ClientService clientService;
 
     public DetermineTotalFundForPMS(ClientService clientService)
@@ -20,8 +22,11 @@ public class DetermineTotalFundForPMS {
      this.clientService = clientService;
     }
 
+    public DetermineTotalFundForPMS() {
+        //empty constructor
+    }
 
-public BigDecimal calculateTotalFundAmount()
+    public BigDecimal calculateTotalFundAmount()
   {
     Iterable<ClientDetails> allClients =  this.clientService.getAllClients();
     List<ClientDetails> clientDetails = StreamSupport.stream(allClients.spliterator(), false)
