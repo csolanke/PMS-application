@@ -62,6 +62,6 @@ public class PMSController {
     {
         BigDecimal calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
 
-        return new ResponseEntity<BigDecimal>(calculatedSum,HttpStatus.OK);
+        return new ResponseEntity<>(calculatedSum,HttpStatus.OK);
     }
 }
