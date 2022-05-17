@@ -3,6 +3,7 @@ package com.cds.org.service;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.persistence.ClientDetailsRepository;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,12 @@ class ClientServiceTest {
     @Autowired
     ClientDetailsRepository clientDetailsRepository ;
 
+    @AfterEach
+    void tearDown()
+    {
+        clientDetailsRepository.deleteAll();
+    }
+
     @Test
     void testAddClient() {
 
@@ -36,7 +43,7 @@ class ClientServiceTest {
 
         ClientDetails savedClientDetails = clientDetailsRepository.save(clientDetails);
 
-        assertThat(savedClientDetails.getClientId()).isEqualTo(2);
+        assertThat(savedClientDetails.getClientName()).isEqualTo("chandrakant");
         assertThat(savedClientDetails).isNotNull();
     }
 
