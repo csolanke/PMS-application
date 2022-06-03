@@ -57,11 +57,19 @@ public class PMSController {
     }
 
 
+    @GetMapping("/client/{id}")
+    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id){
+
+        ClientDetails clientByID = service.getClientByID(id);
+        ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientByID);
+        return new ResponseEntity<>(clientDetailsDTO,HttpStatus.OK);
+    }
+
+
     @GetMapping("/fundValue")
     public ResponseEntity<BigDecimal> getPMSTotalFundValue()
     {
         BigDecimal calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
-
         return new ResponseEntity<>(calculatedSum,HttpStatus.OK);
     }
 }

@@ -21,8 +21,8 @@ public class ClientDetailsDTO {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+    public void setClientId(Long clientId) {
+        this.clientId = Math.toIntExact(clientId);
     }
 
     public String getClientName() {

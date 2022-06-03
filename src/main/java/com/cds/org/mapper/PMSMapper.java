@@ -13,7 +13,7 @@ public class PMSMapper {
         ClientDetails clientDetails = new ClientDetails();
         if(null!=dto)
         {
-            clientDetails.setClientId(dto.getClientId());
+            clientDetails.setClientId((long) dto.getClientId());
             clientDetails.setClientName(dto.getClientName());
             clientDetails.setClientEmailId(dto.getClientEmailId());
             clientDetails.setClientAddress(dto.getClientAddress());

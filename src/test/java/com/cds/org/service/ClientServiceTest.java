@@ -32,7 +32,7 @@ class ClientServiceTest {
 
         clientService = new ClientService(clientDetailsRepository);
         ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClientId(1);
+        clientDetails.setClientId(1L);
         clientDetails.setClientName("chandrakant");
         clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
         clientDetails.setClientBrokerAccountName("Zerodha");
@@ -54,7 +54,7 @@ class ClientServiceTest {
 
         clientService = new ClientService(clientDetailsRepository);
         ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClientId(1);
+        clientDetails.setClientId(1L);
         clientDetails.setClientName("chandrakant");
         clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
         clientDetails.setClientBrokerAccountName("Zerodha");

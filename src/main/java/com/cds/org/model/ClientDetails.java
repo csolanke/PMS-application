@@ -11,7 +11,7 @@ public class ClientDetails {
 
     @Id
     @GeneratedValue
-    private int clientId;
+    private Long clientId;
     private String clientName;
     private String clientEmailId;
     private String clientAddress;
@@ -24,17 +24,6 @@ public class ClientDetails {
         //default constructor
     }
 
-    public ClientDetails(int clientId, String clientName, String clientEmailId, String clientAddress, String clientBrokerAccountName, LocalDate pmsPurchasedDate, String paymentMode, BigDecimal clientPortfolioAmount) {
-        this.clientId = clientId;
-        this.clientName = clientName;
-        this.clientEmailId = clientEmailId;
-        this.clientAddress = clientAddress;
-        this.clientBrokerAccountName = clientBrokerAccountName;
-        this.pmsPurchasedDate = pmsPurchasedDate;
-        this.paymentMode = paymentMode;
-        this.clientPortfolioAmount = clientPortfolioAmount;
-    }
-
     public LocalDate getPmsPurchasedDate() {
         return pmsPurchasedDate;
     }
@@ -43,11 +32,11 @@ public class ClientDetails {
         this.pmsPurchasedDate = pmsPurchasedDate;
     }
 
-    public int getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
