@@ -1,0 +1,1 @@
+insert into user values(10,true,'guest','ROLE_USER','guest');
