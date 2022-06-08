@@ -1,4 +1,4 @@
-package com.cds.org.service;
+package com.cds.org.security;
 
 import com.cds.org.model.User;
 import com.cds.org.persistence.UserRepository;
