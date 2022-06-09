@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-@Ignore
+
 class DetermineTotalFundForPMSTest {
 
     private DetermineTotalFundForPMS determineTotalFundForPMS;
@@ -56,15 +56,12 @@ class DetermineTotalFundForPMSTest {
 
         ClientDetails clientDetails2 = new ClientDetails();
         clientDetails2.setClientId(2l);
-        clientDetails2.setClientName("Chandra");
-        clientDetails2.setClientEmailId("csolanke77@gmail.com");
+        clientDetails2.setClientName("Amey");
+        clientDetails2.setClientEmailId("amey@gmail.com");
         clientDetails2.setClientAddress("LakeMary");
         clientDetails2.setPmsPurchasedDate(LocalDate.now());
-        clientDetails2.setClientBrokerAccountName("zerodha");
-        clientDetails2.setClientPortfolioAmount(BigDecimal.valueOf(700000));
-
-
-
+        clientDetails2.setClientBrokerAccountName("upstox");
+        clientDetails2.setClientPortfolioAmount(BigDecimal.valueOf(800000));
 
 
         ArrayList<ClientDetails> allClients = new ArrayList<>();
@@ -77,12 +74,55 @@ class DetermineTotalFundForPMSTest {
 
         assertThat(allClients.stream().map(cl->cl.getClientPortfolioAmount())
                 .reduce(BigDecimal.ZERO,BigDecimal::add)).
-                isEqualByComparingTo(BigDecimal.valueOf(800000));
+                isEqualByComparingTo(BigDecimal.valueOf(1500000));
 
         assertThat(determineTotalFundForPMS.calculateTotalFundAmount()).
-               isEqualByComparingTo(BigDecimal.valueOf(800000));
+               isEqualByComparingTo(BigDecimal.valueOf(1500000));
 
            verify(clientService).getAllClients();
+
+
+    }
+
+
+    @Test
+    void testCalculateTotalFundAmountIsZero() {
+
+        ClientDetails clientDetails1 = new ClientDetails();
+        clientDetails1.setClientId(1l);
+        clientDetails1.setClientName("Chandra");
+        clientDetails1.setClientEmailId("csolanke77@gmail.com");
+        clientDetails1.setClientAddress("LakeMary");
+        clientDetails1.setPmsPurchasedDate(LocalDate.now());
+        clientDetails1.setClientBrokerAccountName("zerodha");
+        clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(0));
+
+        ClientDetails clientDetails2 = new ClientDetails();
+        clientDetails2.setClientId(2l);
+        clientDetails2.setClientName("Amey");
+        clientDetails2.setClientEmailId("amey@gmail.com");
+        clientDetails2.setClientAddress("LakeMary");
+        clientDetails2.setPmsPurchasedDate(LocalDate.now());
+        clientDetails2.setClientBrokerAccountName("upstox");
+        clientDetails2.setClientPortfolioAmount(BigDecimal.valueOf(0));
+
+
+        ArrayList<ClientDetails> allClients = new ArrayList<>();
+        allClients.add(clientDetails1);
+        allClients.add(clientDetails2);
+        Iterable<ClientDetails> allClientsIterable = allClients;
+
+        Mockito.when(clientService.getAllClients()).thenReturn(allClients);
+
+
+        assertThat(allClients.stream().map(cl->cl.getClientPortfolioAmount())
+                .reduce(BigDecimal.ZERO,BigDecimal::add)).
+                isEqualByComparingTo(BigDecimal.valueOf(0));
+
+        assertThat(determineTotalFundForPMS.calculateTotalFundAmount()).
+                isEqualByComparingTo(BigDecimal.valueOf(0));
+
+        verify(clientService).getAllClients();
 
 
     }
