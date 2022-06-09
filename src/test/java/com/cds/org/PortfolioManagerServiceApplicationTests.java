@@ -8,6 +8,7 @@ class PortfolioManagerServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

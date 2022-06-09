@@ -2,7 +2,6 @@ package com.cds.org.security;
 
 import com.cds.org.model.User;
 import com.cds.org.persistence.UserRepository;
-import com.cds.org.security.MyUserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,8 +18,8 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user  = userRepository.findByUserName(username);
-        user.orElseThrow(()-> new UsernameNotFoundException("user tried to access API does not exist in DB"+ username));
 
-        return user.map(MyUserDetail::new).get();
+        return user.map(MyUserDetail::new).
+                orElseThrow(()-> new UsernameNotFoundException("user tried to access API does not exist in DB"+ username));
     }
 }

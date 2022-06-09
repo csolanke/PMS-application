@@ -52,7 +52,7 @@ public class PMSController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws BadCredentialsException {
 
       try {
              authenticationManager
@@ -62,7 +62,7 @@ public class PMSController {
             ));
           }
       catch (BadCredentialsException e) {
-              throw new Exception("Incorrect username and password ",e);
+              throw new BadCredentialsException("Incorrect username and password ",e);
          }
 
           final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
@@ -99,7 +99,7 @@ public class PMSController {
 
 
     @GetMapping("/client/{id}")
-    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id){
+    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) {
 
         ClientDetails clientByID = service.getClientByID(id);
         ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientByID);

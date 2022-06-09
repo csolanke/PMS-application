@@ -27,13 +27,18 @@ public class ClientService {
     }
 
     public ClientDetails getClientByID(Long id) {
-        Optional<ClientDetails> byId = this.repository.findById(id);
-        if (byId.isPresent()) {
-            return byId.get();
-        } else {
-            new ResourceNotFoundException("Requested resource does not exist");
-        }
 
-        return null;
+        Optional<ClientDetails> clientDetailsOptional = this.repository.findById(id);
+        if (clientDetailsOptional.isPresent()) {
+            return clientDetailsOptional.get();
+        } else {
+            try {
+                throw new ResourceNotFoundException("Requested resource does not exist");
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+           return null;
     }
-}
+    }
+
