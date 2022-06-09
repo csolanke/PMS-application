@@ -3,6 +3,7 @@ package com.cds.org.controller;
 import com.cds.org.computation.DetermineTotalFundForPMS;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
+import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
 import com.cds.org.service.PMSService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -50,6 +52,12 @@ class PMSControllerTest {
 
     @MockBean
     private DetermineTotalFundForPMS determineTotalFundForPMS;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    UserDetailsService userDetailsService;
 
 
     @Test
