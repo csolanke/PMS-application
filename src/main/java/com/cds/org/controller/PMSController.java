@@ -11,6 +11,7 @@ import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -72,7 +73,6 @@ public class PMSController {
         return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
     }
 
-
     @PostMapping("/client")
     public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody ClientDetailsDTO dto)
     {
@@ -83,22 +83,17 @@ public class PMSController {
     }
 
 
-    @GetMapping("/client")
+   @GetMapping(value ="/client",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClientDetailsDTO>> getAllClients()
     {
-        Iterable<ClientDetails> allClients = service.getAllClients();
-        List<ClientDetails> clientDetails = StreamSupport.stream(allClients.spliterator(), false)
-                .collect(Collectors.toList());
+        List<ClientDetails> clientDetails = service.getAllClients();
 
-        List<ClientDetailsDTO> dtoList = new ArrayList<>();
-        for (ClientDetails clientDetail : clientDetails) {
-            dtoList.add(mapper.clientDetailsEntityToDto(clientDetail));
-        }
+        List<ClientDetailsDTO> dtoList = getClientDetailsDTOList(clientDetails);
         return new ResponseEntity<>(dtoList,HttpStatus.OK);
     }
 
 
-    @GetMapping("/client/{id}")
+    @GetMapping(value = "/client/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) {
 
         ClientDetails clientByID = service.getClientByID(id);
@@ -112,6 +107,15 @@ public class PMSController {
     {
         BigDecimal calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
         return new ResponseEntity<>(calculatedSum,HttpStatus.OK);
+    }
+
+
+    private List<ClientDetailsDTO> getClientDetailsDTOList(List<ClientDetails> clientDetails) {
+        List<ClientDetailsDTO> dtoList = new ArrayList<>();
+        for (ClientDetails clientDetail : clientDetails) {
+            dtoList.add(mapper.clientDetailsEntityToDto(clientDetail));
+        }
+        return dtoList;
     }
 
 }
