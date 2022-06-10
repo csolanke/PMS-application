@@ -1,210 +1,142 @@
 package com.cds.org.controller;
 
-import com.cds.org.computation.DetermineTotalFundForPMS;
+import com.cds.org.dto.ClientDetailsDTO;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
-import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
-import com.cds.org.service.PMSService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.verification.VerificationMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(PMSController.class)
-class PMSControllerTest {
 
-    @Autowired
+@RunWith(MockitoJUnitRunner.class)
+public class PMSControllerTest {
+
     private MockMvc mockMvc;
 
-    @MockBean
+    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectWriter objectWriter = objectMapper.writer();
+
+    @Mock
     private ClientService clientService;
 
-    @MockBean
-    private PMSService pmsService;
+    @Mock
+    private PMSMapper pmsMapper;
 
-    @MockBean
-    @Autowired
-    private PMSMapper mapper;
-
-    @MockBean
-    private DetermineTotalFundForPMS determineTotalFundForPMS;
-
-    @MockBean
-    private JwtUtil jwtUtil;
-
-    @MockBean
-    UserDetailsService userDetailsService;
+    @InjectMocks
+    private PMSController pmsController;
 
 
-    @Test
-    void testAddPMSClient() throws Exception {
-
-        ClientDetails mockClientDetails = new ClientDetails();
-        mockClientDetails.setClientId(1l);
-        mockClientDetails.setClientName("chandra");
-        mockClientDetails.setClientEmailId("csolanke77@gmail,com");
-        mockClientDetails.setClientBrokerAccountName("Zerodha");
-        mockClientDetails.setPaymentMode("online");
-        mockClientDetails.setClientPortfolioAmount(BigDecimal.valueOf(700000));
-
-        String expectedJson = this.mapToJSON(mockClientDetails);
-
-        clientService.addClient(Mockito.any(ClientDetails.class));
-
-        String URI = "/api/v1/client";
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post(URI)
-                .accept(MediaType.APPLICATION_JSON).content(expectedJson)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        String outputInJson = result.getResponse().getContentAsString();
-
-        assertThat(result).isNotNull();
-        assertThat(result.getResponse()).isNotNull();
-
+    @Before
+    public void setUp(){
+        MockitoAnnotations.initMocks(this);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(pmsController).build();
     }
 
     @Test
-    void testGetAllClients() throws Exception {
+    public void testGetAllClients() throws Exception {
+
+
         ClientDetails clientDetails = new ClientDetails();
         clientDetails.setClientName("chandra");
-        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(90000));
-        clientDetails.setClientEmailId("csolanke@hotmail.com");
-
+        clientDetails.setClientEmailId("csolanke77@gmail.com");
+        clientDetails.setClientBrokerAccountName("Zerodha");
 
         ClientDetails clientDetails1 = new ClientDetails();
-        clientDetails1.setClientName("Amey");
-        clientDetails1.setClientEmailId("Amey@hotmail.com");
-        clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(80000));
+        clientDetails1.setClientName("Bhagya");
+        clientDetails1.setClientEmailId("bhagya@gmail.com");
+        clientDetails1.setClientBrokerAccountName("Upstox");
 
-        ArrayList<ClientDetails> allClientList = new ArrayList<>();
-        allClientList.add(clientDetails);
-        allClientList.add(clientDetails1);
+        List<ClientDetails> clientDetailsList = new ArrayList<>();
+        clientDetailsList.add(clientDetails);
+        clientDetailsList.add(clientDetails1);
 
-        Iterable<ClientDetails> allClients = allClientList;
 
-        Mockito.when(clientService.getAllClients()).thenReturn(allClients);
+        ClientDetailsDTO dto = new ClientDetailsDTO();
+        dto.setClientName("chandra");
+        dto.setClientEmailId("csolanke77@gmail.com");
+        dto.setClientBrokerAccountName("Zerodha");
+        dto.setClientId(1l);
 
-        String URI = "/api/v1/client";
-        RequestBuilder requestBuilder =MockMvcRequestBuilders
-                .get(URI)
-                .accept(MediaType.APPLICATION_JSON);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        ClientDetailsDTO dto1 = new ClientDetailsDTO();
+        dto1.setClientName("chandra");
+        dto1.setClientEmailId("csolanke77@gmail.com");
+        dto1.setClientBrokerAccountName("Zerodha");
+        dto1.setClientId(1l);
 
-        String expectedJsonString = this.mapToJSON(allClientList);
-        String outputJsonString = result
-                .getResponse()
-                .getContentAsString();
 
-        assertThat(allClients).isNotNull();
-        //assertThat(expectedJsonString).isEqualTo(outputJsonString);
+        String inputMockedtoString = mapToJSON(clientDetailsList);
+
+        Mockito.when(clientService.getAllClients()).thenReturn(clientDetailsList);
+
+        Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails)).thenReturn(dto);
+        Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails1)).thenReturn(dto1);
+
+
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/v1/client")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn();
+
+        Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(200);
+        Assertions.assertThat(result.getResponse().getContentAsString()).contains("chandra");
 
 
     }
 
-
     @Test
-    void testGetClientByID() throws Exception {
+    public void testGetClientDetailsByID() throws Exception {
         ClientDetails clientDetails = new ClientDetails();
-
-        clientDetails.setClientId(1l);
+        clientDetails.setClientName("chandra");
         clientDetails.setClientEmailId("csolanke77@gmail.com");
-        clientDetails.setClientAddress("LakeMary");
-        clientDetails.setClientBrokerAccountName("zerodha");
-        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(70000));
+        clientDetails.setClientBrokerAccountName("Zerodha");
+        clientDetails.setClientId(1l);
+
+
+        ClientDetailsDTO dto = new ClientDetailsDTO();
+        dto.setClientName("chandra");
+        dto.setClientEmailId("csolanke77@gmail.com");
+        dto.setClientBrokerAccountName("Zerodha");
+        dto.setClientId(1l);
+
+        String mockedObjectToJson = mapToJSON(clientDetails);
 
         Mockito.when(clientService.getClientByID(1l)).thenReturn(clientDetails);
 
-        String expectedJson = this.mapToJSON(clientDetails);
+        //try to improve this mocking later
+        Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails)).thenReturn(dto);
 
-        String URI = "/api/v1/client/1";
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/client/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get(URI)
-                        .accept(MediaType.APPLICATION_JSON);
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        String outputJson = result.getResponse().getContentAsString();
-
-
-
-       // assertThat(outputJson).isEqualTo(expectedJson);
-        assertThat(clientDetails).isNotNull();
-
-
-    }
-    
-    @Test
-    void testGetPMSTotalFundValue() throws Exception {
-
-        ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClientName("chandra");
-        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(90000));
-        clientDetails.setClientEmailId("csolanke@hotmail.com");
-
-
-        ClientDetails clientDetails1 = new ClientDetails();
-        clientDetails1.setClientName("Amey");
-        clientDetails1.setClientEmailId("Amey@hotmail.com");
-        clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(80000));
-
-        ArrayList<ClientDetails> allClientList = new ArrayList<>();
-        allClientList.add(clientDetails);
-        allClientList.add(clientDetails1);
-
-        Iterable<ClientDetails> allClients = allClientList;
-
-        Mockito.when(clientService.getAllClients()).thenReturn(allClients);
-
-        String URI = "/api/v1/client/fundValue";
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get(URI)
-                .accept(MediaType.APPLICATION_JSON);
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        String outputJson = result.getResponse().getContentAsString();
-
-
-        BigDecimal totalFundValue = BigDecimal.valueOf(70000);
-        Mockito.when(determineTotalFundForPMS.calculateTotalFundAmount())
-                .thenReturn(totalFundValue);
-
-        assertThat(totalFundValue).isNotNull();
-        assertThat(totalFundValue).isEqualByComparingTo(BigDecimal.valueOf(70000));
-        
-        
-        
+        Assertions.assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo(mockedObjectToJson);
+        Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
     }
 
- // this method conerts object to json format
+   // this method conerts object to json format
     private String mapToJSON(Object object) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(object);
     }
 
-}
+    }
