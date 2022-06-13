@@ -1,16 +1,30 @@
 package com.cds.org.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ClientDetailsDTO {
+
+
     private int clientId;
+
+    @NotBlank (message = "Client name must be provided")
     private String clientName;
+
+    @NotNull
+    @Email (message = "Email address is not valid")
     private String clientEmailId;
     private String clientAddress;
+
+    @NotBlank(message = "clients broker name required")
     private String clientBrokerAccountName;
+
     private LocalDate pmsPurchasedDate;
     private String paymentMode;
+
     private BigDecimal clientPortfolioAmount;
 
     public ClientDetailsDTO() {

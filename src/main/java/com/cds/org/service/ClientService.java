@@ -1,5 +1,6 @@
 package com.cds.org.service;
 
+import com.cds.org.exceptions.ResourceNotFoundException;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.persistence.ClientDetailsRepository;
 import org.springframework.stereotype.Service;
@@ -23,22 +24,18 @@ public class ClientService {
     }
 
     public List<ClientDetails> getAllClients() {
-       return  this.repository.findAll();
+        return this.repository.findAll();
     }
 
-    public ClientDetails getClientByID(Long id) {
+    public ClientDetails getClientByID(Long id) throws ResourceNotFoundException {
 
         Optional<ClientDetails> clientDetailsOptional = this.repository.findById(id);
-        if (clientDetailsOptional.isPresent()) {
-            return clientDetailsOptional.get();
-        } else {
-            try {
-                throw new ResourceNotFoundException("Requested resource does not exist");
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
-            }
+        if (!clientDetailsOptional.isPresent()) {
+                throw new ResourceNotFoundException("Client with ID : " +id +" does not exist");
         }
-           return null;
+
+        return clientDetailsOptional.get();
+
     }
-    }
+}
 

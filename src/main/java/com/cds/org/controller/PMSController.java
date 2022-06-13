@@ -9,6 +9,7 @@ import com.cds.org.security.AuthenticationResponse;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
+import com.cds.org.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,13 +21,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -74,7 +74,7 @@ public class PMSController {
     }
 
     @PostMapping("/client")
-    public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody ClientDetailsDTO dto)
+    public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody @Valid ClientDetailsDTO dto)
     {
         ClientDetails clientDetails = mapper.clientDetailsDTOToEntity(dto);
         service.addClient(clientDetails);
@@ -94,9 +94,10 @@ public class PMSController {
 
 
     @GetMapping(value = "/client/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) {
+    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) throws ResourceNotFoundException {
 
         ClientDetails clientByID = service.getClientByID(id);
+
         ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientByID);
         return new ResponseEntity<>(clientDetailsDTO,HttpStatus.OK);
     }

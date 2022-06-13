@@ -1,8 +1,8 @@
-package com.cds.org.service;
+package com.cds.org.exceptions;
 
 public class ResourceNotFoundException extends Exception{
 
-    ResourceNotFoundException(String message){
+    public ResourceNotFoundException(String message){
         super(message);
     }
 
