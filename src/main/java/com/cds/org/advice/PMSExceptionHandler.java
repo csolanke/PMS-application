@@ -2,7 +2,7 @@ package com.cds.org.advice;
 
 
 import com.cds.org.dto.ErrorMessage;
-import com.cds.org.exceptions.ResourceNotFoundException;
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,13 +30,13 @@ public class PMSExceptionHandler {
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public  ErrorMessage handleResourceNotFoundException(ResourceNotFoundException ex){
+    @ExceptionHandler(ClientDetailsNotFoundException.class)
+    public  ErrorMessage handleResourceNotFoundException(ClientDetailsNotFoundException ex){
 
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setError("Not Found");
         errorMessage.setStatus(404);
-        errorMessage.setException("com.cds.org.exceptions.ResourceNotFoundException");
+        errorMessage.setException("com.cds.org.exceptions.ClientDetailsNotFoundException");
         errorMessage.setMessage(ex.getMessage());
         errorMessage.setTimestamp(LocalDateTime.now());
 

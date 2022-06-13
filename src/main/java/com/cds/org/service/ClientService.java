@@ -1,6 +1,6 @@
 package com.cds.org.service;
 
-import com.cds.org.exceptions.ResourceNotFoundException;
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.persistence.ClientDetailsRepository;
 import org.springframework.stereotype.Service;
@@ -27,11 +27,11 @@ public class ClientService {
         return this.repository.findAll();
     }
 
-    public ClientDetails getClientByID(Long id) throws ResourceNotFoundException {
+    public ClientDetails getClientByID(Long id) throws ClientDetailsNotFoundException {
 
         Optional<ClientDetails> clientDetailsOptional = this.repository.findById(id);
         if (!clientDetailsOptional.isPresent()) {
-                throw new ResourceNotFoundException("Client with ID : " +id +" does not exist");
+                throw new ClientDetailsNotFoundException("client details not found with Id : "+id);
         }
 
         return clientDetailsOptional.get();

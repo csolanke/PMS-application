@@ -9,7 +9,7 @@ import com.cds.org.security.AuthenticationResponse;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
-import com.cds.org.exceptions.ResourceNotFoundException;
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -94,7 +94,7 @@ public class PMSController {
 
 
     @GetMapping(value = "/client/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) throws ClientDetailsNotFoundException {
 
         ClientDetails clientByID = service.getClientByID(id);
 
