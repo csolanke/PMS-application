@@ -28,10 +28,7 @@ public class DetermineTotalFundForPMS {
 
     public BigDecimal calculateTotalFundAmount()
   {
-    Iterable<ClientDetails> allClients =  this.clientService.getAllClients();
-    List<ClientDetails> clientDetails = StreamSupport.stream(allClients.spliterator(), false)
-            .collect(Collectors.toList());
-
+      List<ClientDetails> clientDetails = this.clientService.getAllClients();
      return  clientDetails.stream()
               .filter(Objects::nonNull)
               .map(ClientDetails::getClientPortfolioAmount)

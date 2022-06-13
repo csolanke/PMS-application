@@ -1,5 +1,6 @@
 package com.cds.org.controller;
 
+import com.cds.org.computation.DetermineTotalFundForPMS;
 import com.cds.org.dto.ClientDetailsDTO;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,9 @@ public class PMSControllerTest {
     @InjectMocks
     private PMSController pmsController;
 
+    @Mock
+    private DetermineTotalFundForPMS determineTotalFundForPMS;
+
 
     @Before
     public void setUp(){
@@ -58,11 +63,13 @@ public class PMSControllerTest {
         clientDetails.setClientName("chandra");
         clientDetails.setClientEmailId("csolanke77@gmail.com");
         clientDetails.setClientBrokerAccountName("Zerodha");
+        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
 
         ClientDetails clientDetails1 = new ClientDetails();
         clientDetails1.setClientName("Bhagya");
         clientDetails1.setClientEmailId("bhagya@gmail.com");
         clientDetails1.setClientBrokerAccountName("Upstox");
+        clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(600000));
 
         List<ClientDetails> clientDetailsList = new ArrayList<>();
         clientDetailsList.add(clientDetails);
@@ -132,6 +139,48 @@ public class PMSControllerTest {
         Assertions.assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo(mockedObjectToJson);
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
     }
+
+    @Test
+    public void testGetTotalFundPMSFundValue() throws Exception {
+
+        ClientDetails clientDetails = new ClientDetails();
+        clientDetails.setClientName("chandra");
+        clientDetails.setClientEmailId("csolanke77@gmail.com");
+        clientDetails.setClientBrokerAccountName("Zerodha");
+        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
+
+        ClientDetails clientDetails1 = new ClientDetails();
+        clientDetails1.setClientName("Bhagya");
+        clientDetails1.setClientEmailId("bhagya@gmail.com");
+        clientDetails1.setClientBrokerAccountName("Upstox");
+        clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(600000));
+
+        List<ClientDetails> clientDetailsList = new ArrayList<>();
+        clientDetailsList.add(clientDetails);
+        clientDetailsList.add(clientDetails1);
+
+       // Mockito.when(clientService.getAllClients()).thenReturn(clientDetailsList);
+        Mockito.when(determineTotalFundForPMS.calculateTotalFundAmount()).
+                thenReturn(BigDecimal.valueOf(1500000));
+
+
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/v1/fundValue")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn();
+
+        String fundValueAsString = result.getResponse().getContentAsString();
+
+        Assertions.assertThat(fundValueAsString).contains("1500000");
+        Assertions.assertThat(determineTotalFundForPMS.calculateTotalFundAmount())
+                .isNotNull();
+        Assertions.assertThat(determineTotalFundForPMS.calculateTotalFundAmount())
+                .isEqualTo(BigDecimal.valueOf(1500000));
+
+
+    }
+
 
    // this method conerts object to json format
     private String mapToJSON(Object object) throws JsonProcessingException {

@@ -42,6 +42,7 @@ public class PMSController {
     @Autowired
     UserDetailsService userDetailsService;
 
+
     private ClientService service;
     private PMSMapper mapper;
     private DetermineTotalFundForPMS determineTotalFundForPMS;
@@ -103,7 +104,7 @@ public class PMSController {
     }
 
 
-    @GetMapping("/fundValue")
+    @GetMapping(value = "/fundValue" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BigDecimal> getPMSTotalFundValue()
     {
         BigDecimal calculatedSum = determineTotalFundForPMS.calculateTotalFundAmount();
