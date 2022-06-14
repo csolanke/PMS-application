@@ -27,8 +27,6 @@ public class PMSExceptionHandler {
         return errorMap;
     }
 
-
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ClientDetailsNotFoundException.class)
     public  ErrorMessage handleResourceNotFoundException(ClientDetailsNotFoundException ex){

@@ -1,19 +1,17 @@
 package com.cds.org.persistence;
 
-import com.cds.org.model.User;
-import org.hibernate.Criteria;
+import com.cds.org.model.ClientDetails;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
-public class UserRepository{
-
+public class ClientDetailsDAO {
 
     @Autowired
     private SessionFactory factory;
@@ -26,12 +24,19 @@ public class UserRepository{
         return session;
     }
 
-    public User fetchUserByName(String name){
-        Session session = getSession();
-        Criteria criteria = session.createCriteria(User.class);
-        criteria.add(Restrictions.eq("userName", name));
-       return (User) criteria.list().get(0);
 
+    public ClientDetails saveClientDetails(ClientDetails clientDetails){
+        getSession().save(clientDetails);
+        return clientDetails;
     }
 
+    public List<ClientDetails> getAllClientDetails(){
+
+        return getSession().createCriteria(ClientDetails.class).list();
+    }
+
+    public ClientDetails getClientDetailsById(Long id){
+         Session session = getSession();
+        return session.get(ClientDetails.class, id);
+    }
 }

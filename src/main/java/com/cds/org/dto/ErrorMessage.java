@@ -11,6 +11,7 @@ public class ErrorMessage {
     private String message;
 
     public ErrorMessage() {
+        //default constructor
     }
 
     public LocalDateTime getTimestamp() {

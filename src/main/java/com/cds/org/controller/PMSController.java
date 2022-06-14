@@ -54,7 +54,7 @@ public class PMSController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws BadCredentialsException {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) throws BadCredentialsException {
 
       try {
              authenticationManager
@@ -78,7 +78,7 @@ public class PMSController {
     public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody @Valid ClientDetailsDTO dto)
     {
         ClientDetails clientDetails = mapper.clientDetailsDTOToEntity(dto);
-        service.addClient(clientDetails);
+          service.addClient(clientDetails);
         ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientDetails);
         return new ResponseEntity<>(clientDetailsDTO,HttpStatus.CREATED);
     }

@@ -1,8 +1,13 @@
 package com.cds.org.security;
 
+import javax.validation.constraints.NotBlank;
+
 public class AuthenticationRequest {
 
+    @NotBlank(message = "username can not be blank")
     private String username;
+
+    @NotBlank(message = "password can not be blank")
     private String password;
 
     public AuthenticationRequest(String username, String password) {
