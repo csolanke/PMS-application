@@ -57,12 +57,12 @@ public class PMSController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) throws BadCredentialsException {
 
       try {
-             authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
-                    request.getPassword()
-            ));
-          }
+          authenticationManager
+                  .authenticate(new UsernamePasswordAuthenticationToken(
+                          request.getUsername(),
+                          request.getPassword()
+                  ));
+      }
       catch (BadCredentialsException e) {
               throw new BadCredentialsException("Incorrect username and password ",e);
          }
@@ -74,12 +74,12 @@ public class PMSController {
         return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
     }
 
-    @PostMapping("/client")
+    @PostMapping(value = "/client",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClientDetailsDTO> addPMSClient(@RequestBody @Valid ClientDetailsDTO dto)
     {
         ClientDetails clientDetails = mapper.clientDetailsDTOToEntity(dto);
-          service.addClient(clientDetails);
-        ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientDetails);
+        ClientDetails clientDetailsAdded = service.addClient(clientDetails);
+        ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientDetailsAdded);
         return new ResponseEntity<>(clientDetailsDTO,HttpStatus.CREATED);
     }
 

@@ -22,7 +22,7 @@ public class ClientDetailsDTO {
     @NotBlank(message = "clients broker name required")
     private String clientBrokerAccountName;
 
-    @NotNull(message = "date is required")
+   //@NotNull(message = "date is required")
     private LocalDate pmsPurchasedDate;
     private String paymentMode;
 

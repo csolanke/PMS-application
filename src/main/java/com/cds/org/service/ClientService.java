@@ -1,5 +1,6 @@
 package com.cds.org.service;
 
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.persistence.ClientDetailsDAO;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class ClientService {
         this.clientDetailsDAO = clientDetailsDAO;
     }
 
-    public void addClient(ClientDetails clientDetail) {
-        this.clientDetailsDAO.saveClientDetails(clientDetail);
+    public ClientDetails addClient(ClientDetails clientDetail) {
+       return  this.clientDetailsDAO.saveClientDetails(clientDetail);
 
     }
 
@@ -24,7 +25,7 @@ public class ClientService {
         return this.clientDetailsDAO.getAllClientDetails();
     }
 
-    public ClientDetails getClientByID(Long id)  {
+    public ClientDetails getClientByID(Long id) throws ClientDetailsNotFoundException {
        return this.clientDetailsDAO.getClientDetailsById(id);
     }
 

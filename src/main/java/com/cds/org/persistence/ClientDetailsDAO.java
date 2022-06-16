@@ -1,5 +1,6 @@
 package com.cds.org.persistence;
 
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,8 +36,13 @@ public class ClientDetailsDAO {
         return getSession().createCriteria(ClientDetails.class).list();
     }
 
-    public ClientDetails getClientDetailsById(Long id){
+    public ClientDetails getClientDetailsById(Long id) throws ClientDetailsNotFoundException {
          Session session = getSession();
-        return session.get(ClientDetails.class, id);
+        ClientDetails clientDetails = session.get(ClientDetails.class, id);
+        if(clientDetails==null){
+            throw new ClientDetailsNotFoundException("ClientDetails not found for client id " +id);
+        }
+
+        return clientDetails;
     }
 }

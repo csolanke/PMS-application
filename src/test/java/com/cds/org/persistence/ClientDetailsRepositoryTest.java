@@ -1,6 +1,7 @@
 
 package com.cds.org.persistence;
 
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
@@ -18,7 +19,6 @@ import java.util.Optional;
 
 
 @DataJpaTest
-@Ignore
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ClientDetailsRepositoryTest {
 
@@ -29,7 +29,7 @@ class ClientDetailsRepositoryTest {
     @Test
     @Order(1)
     @Rollback(value = false)
-    public void testSaveClientDetails(){
+       void testSaveClientDetails(){
         ClientDetails clientDetails = new ClientDetails();
         clientDetails.setClientName("Gajanan");
         clientDetails.setClientAddress("Pune");
@@ -39,13 +39,13 @@ class ClientDetailsRepositoryTest {
 
         clientDetailsDAO.saveClientDetails(clientDetails);
 
-        Assertions.assertThat(clientDetails.getClientId()).isGreaterThan(0);
+        Assertions.assertThat(clientDetails.getClientId()).isPositive();
     }
 
     @Test
     @Order(2)
     @Rollback(value = false)
-   public  void testGetClientDetailsByID(){
+    void testGetClientDetailsByID() throws ClientDetailsNotFoundException {
 
         ClientDetails clientDetails1 = clientDetailsDAO.getClientDetailsById(1l);
         Assertions.assertThat(clientDetails1.getClientId()).isEqualTo(1L);
@@ -56,7 +56,7 @@ class ClientDetailsRepositoryTest {
     @Test
     @Order(3)
     @Rollback(value = false)
-    public void testGetClientDetailsList(){
+        void testGetClientDetailsList(){
 
         ClientDetails clientDetails2 = new ClientDetails();
         clientDetails2.setClientName("Amey");
@@ -70,7 +70,7 @@ class ClientDetailsRepositoryTest {
         ArrayList<ClientDetails> clientDetailsArrayList = new ArrayList<>();
         clientDetailsArrayList = (ArrayList<ClientDetails>) clientDetailsDAO.getAllClientDetails();
 
-        Assertions.assertThat(clientDetailsArrayList.size()).isEqualTo(2);
+        Assertions.assertThat(clientDetailsArrayList).hasSize(2);
 
     }
     
@@ -78,7 +78,7 @@ class ClientDetailsRepositoryTest {
     @Test
     @Order(4)
     @Rollback(value = false)
-    public  void testUpdateClientDetails(){
+     void testUpdateClientDetails() throws ClientDetailsNotFoundException {
 
         ClientDetails clientDetails1 = clientDetailsDAO.getClientDetailsById(1l);
           clientDetails1.setClientAddress("Aurangabad");
