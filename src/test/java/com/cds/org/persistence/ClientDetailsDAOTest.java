@@ -1,4 +1,6 @@
 
+
+
 package com.cds.org.persistence;
 
 import com.cds.org.exceptions.ClientDetailsNotFoundException;
@@ -20,7 +22,7 @@ import java.util.Optional;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ClientDetailsRepositoryTest {
+class ClientDetailsDAOTest {
 
     @Autowired
     private ClientDetailsDAO clientDetailsDAO;
@@ -31,18 +33,17 @@ class ClientDetailsRepositoryTest {
     @Rollback(value = false)
        void testSaveClientDetails(){
         ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClientName("Gajanan");
         clientDetails.setClientAddress("Pune");
         clientDetails.setClientBrokerAccountName("Upstox");
         clientDetails.setPaymentMode("Online");
         clientDetails.setPmsPurchasedDate(LocalDate.of(2022,01,01));
 
-        clientDetailsDAO.saveClientDetails(clientDetails);
+        ClientDetails clientDetails1 = clientDetailsDAO.saveClientDetails(clientDetails);
 
-        Assertions.assertThat(clientDetails.getClientId()).isPositive();
+        Assertions.assertThat(clientDetails1.getId().getClientId()).isPositive();
     }
 
-    @Test
+   /* @Test
     @Order(2)
     @Rollback(value = false)
     void testGetClientDetailsByID() throws ClientDetailsNotFoundException {
@@ -88,7 +89,8 @@ class ClientDetailsRepositoryTest {
 
     }
 
-   /* @Test
+
+@Test
     @Order(5)
     @Rollback(value = false)
     public void testDeleteClientDetailsById(){
@@ -104,4 +106,7 @@ class ClientDetailsRepositoryTest {
         Assertions.assertThat(clientDetails).isNull();
 
     }*/
+
 }
+
+
