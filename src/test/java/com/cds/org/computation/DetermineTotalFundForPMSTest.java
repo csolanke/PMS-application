@@ -1,8 +1,10 @@
+
 package com.cds.org.computation;
 
 
 
 import com.cds.org.model.ClientDetails;
+import com.cds.org.model.ClientDetailsIdentity;
 import com.cds.org.service.ClientService;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.Ignore;
@@ -44,19 +46,25 @@ class DetermineTotalFundForPMSTest {
     @Test
     void testCalculateTotalFundAmount() {
 
+        ClientDetailsIdentity id = new ClientDetailsIdentity();
+        id.setClientId(1l);
+        id.setClientName("chandra");
+        id.setClientEmailId("csolanke77@gmail.com");
+
         ClientDetails clientDetails1 = new ClientDetails();
-        clientDetails1.setClientId(1l);
-        clientDetails1.setClientName("Chandra");
-        clientDetails1.setClientEmailId("csolanke77@gmail.com");
+        clientDetails1.setId(id);
         clientDetails1.setClientAddress("LakeMary");
         clientDetails1.setPmsPurchasedDate(LocalDate.now());
         clientDetails1.setClientBrokerAccountName("zerodha");
         clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(700000));
 
         ClientDetails clientDetails2 = new ClientDetails();
-        clientDetails2.setClientId(2l);
-        clientDetails2.setClientName("Amey");
-        clientDetails2.setClientEmailId("amey@gmail.com");
+        ClientDetailsIdentity id2 = new ClientDetailsIdentity();
+
+        id2.setClientId(2l);
+        id2.setClientName("Amey");
+        id2.setClientEmailId("amey@gmail.com");
+        clientDetails2.setId(id2);
         clientDetails2.setClientAddress("LakeMary");
         clientDetails2.setPmsPurchasedDate(LocalDate.now());
         clientDetails2.setClientBrokerAccountName("upstox");
@@ -87,19 +95,26 @@ class DetermineTotalFundForPMSTest {
     @Test
     void testCalculateTotalFundAmountIsZero() {
 
+
+        ClientDetailsIdentity id = new ClientDetailsIdentity();
+        id.setClientId(1l);
+        id.setClientName("chandra");
+        id.setClientEmailId("csolanke77@gmail.com");
+
         ClientDetails clientDetails1 = new ClientDetails();
-        clientDetails1.setClientId(1l);
-        clientDetails1.setClientName("Chandra");
-        clientDetails1.setClientEmailId("csolanke77@gmail.com");
+        clientDetails1.setId(id);
         clientDetails1.setClientAddress("LakeMary");
         clientDetails1.setPmsPurchasedDate(LocalDate.now());
         clientDetails1.setClientBrokerAccountName("zerodha");
         clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(0));
 
         ClientDetails clientDetails2 = new ClientDetails();
-        clientDetails2.setClientId(2l);
-        clientDetails2.setClientName("Amey");
-        clientDetails2.setClientEmailId("amey@gmail.com");
+        ClientDetailsIdentity id2 = new ClientDetailsIdentity();
+
+        id2.setClientId(2l);
+        id2.setClientName("Amey");
+        id2.setClientEmailId("amey@gmail.com");
+        clientDetails2.setId(id2);
         clientDetails2.setClientAddress("LakeMary");
         clientDetails2.setPmsPurchasedDate(LocalDate.now());
         clientDetails2.setClientBrokerAccountName("upstox");

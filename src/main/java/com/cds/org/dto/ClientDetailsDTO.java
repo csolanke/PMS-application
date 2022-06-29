@@ -1,60 +1,38 @@
 package com.cds.org.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ClientDetailsDTO {
 
-
-    private int clientId;
-
-    @NotBlank (message = "Client name must be provided")
-    private String clientName;
-
-    @NotNull
-    @Email (message = "Email address is not valid")
-    private String clientEmailId;
+    private ClientDetailsIdentityDTO id;
     private String clientAddress;
-
-    @NotBlank(message = "clients broker name required")
     private String clientBrokerAccountName;
-
-   //@NotNull(message = "date is required")
     private LocalDate pmsPurchasedDate;
     private String paymentMode;
-
-    @NotNull(message = "portfolio amount is required")
     private BigDecimal clientPortfolioAmount;
 
+
+
+
     public ClientDetailsDTO() {
-        super();
     }
 
-    public int getClientId() {
-        return clientId;
+    public ClientDetailsDTO(ClientDetailsIdentityDTO id, String clientAddress, String clientBrokerAccountName, LocalDate pmsPurchasedDate, String paymentMode, BigDecimal clientPortfolioAmount) {
+        this.id = id;
+        this.clientAddress = clientAddress;
+        this.clientBrokerAccountName = clientBrokerAccountName;
+        this.pmsPurchasedDate = pmsPurchasedDate;
+        this.paymentMode = paymentMode;
+        this.clientPortfolioAmount = clientPortfolioAmount;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = Math.toIntExact(clientId);
+    public ClientDetailsIdentityDTO getId() {
+        return id;
     }
 
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientEmailId() {
-        return clientEmailId;
-    }
-
-    public void setClientEmailId(String clientEmailId) {
-        this.clientEmailId = clientEmailId;
+    public void setId(ClientDetailsIdentityDTO id) {
+        this.id = id;
     }
 
     public String getClientAddress() {

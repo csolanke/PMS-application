@@ -7,11 +7,8 @@ import java.time.LocalDate;
 @Entity
 public class ClientDetails {
 
-    @Id
-    @GeneratedValue
-    private Long clientId;
-    private String clientName;
-    private String clientEmailId;
+    @EmbeddedId
+    private ClientDetailsIdentity id;
     private String clientAddress;
     private String clientBrokerAccountName;
     private LocalDate pmsPurchasedDate;
@@ -22,6 +19,24 @@ public class ClientDetails {
         //default constructor
     }
 
+
+    public ClientDetails(ClientDetailsIdentity id, String clientAddress, String clientBrokerAccountName, LocalDate pmsPurchasedDate, String paymentMode, BigDecimal clientPortfolioAmount) {
+        this.id = id;
+        this.clientAddress = clientAddress;
+        this.clientBrokerAccountName = clientBrokerAccountName;
+        this.pmsPurchasedDate = pmsPurchasedDate;
+        this.paymentMode = paymentMode;
+        this.clientPortfolioAmount = clientPortfolioAmount;
+    }
+
+    public ClientDetailsIdentity getId() {
+        return id;
+    }
+
+    public void setId(ClientDetailsIdentity id) {
+        this.id = id;
+    }
+
     public LocalDate getPmsPurchasedDate() {
         return pmsPurchasedDate;
     }
@@ -30,29 +45,7 @@ public class ClientDetails {
         this.pmsPurchasedDate = pmsPurchasedDate;
     }
 
-    public Long getClientId() {
-        return clientId;
-    }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientEmailId() {
-        return clientEmailId;
-    }
-
-    public void setClientEmailId(String clientEmailId) {
-        this.clientEmailId = clientEmailId;
-    }
 
     public String getClientAddress() {
         return clientAddress;

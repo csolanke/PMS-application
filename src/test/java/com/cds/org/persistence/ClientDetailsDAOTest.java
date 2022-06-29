@@ -3,10 +3,8 @@
 
 package com.cds.org.persistence;
 
-import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import org.assertj.core.api.Assertions;
-import org.junit.Ignore;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
 
 
 @DataJpaTest

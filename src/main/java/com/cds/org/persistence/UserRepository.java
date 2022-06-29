@@ -1,13 +1,15 @@
 package com.cds.org.persistence;
 
 import com.cds.org.model.User;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 @Repository
@@ -28,9 +30,14 @@ public class UserRepository{
 
     public User fetchUserByName(String name){
         Session session = getSession();
-        Criteria criteria = session.createCriteria(User.class);
-        criteria.add(Restrictions.eq("userName", name));
-       return (User) criteria.list().get(0);
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.select(root).where(criteriaBuilder.equal(root.get("userName"),name));
+        Query<User> q = session.createQuery(query);
+
+        return  q.getSingleResult();
 
     }
 

@@ -3,7 +3,9 @@ package com.cds.org.controller;
 
 import com.cds.org.computation.DetermineTotalFundForPMS;
 import com.cds.org.dto.ClientDetailsDTO;
+import com.cds.org.dto.ClientDetailsIdentityDTO;
 import com.cds.org.mapper.PMSMapper;
+import com.cds.org.model.ClientDetailsIdentity;
 import com.cds.org.security.AuthenticationRequest;
 import com.cds.org.security.AuthenticationResponse;
 import com.cds.org.model.ClientDetails;
@@ -94,10 +96,12 @@ public class PMSController {
     }
 
 
-    @GetMapping(value = "/client/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClientDetailsDTO> getClientByID(@PathVariable Long id) throws ClientDetailsNotFoundException {
+    @GetMapping(value = "/clientById" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ClientDetailsDTO> getClientByID(@RequestBody ClientDetailsIdentityDTO id) throws ClientDetailsNotFoundException {
 
-        ClientDetails clientByID = service.getClientByID(id);
+
+        ClientDetailsIdentity clientDetailsIdentity = mapper.clientDetailsIdentityDtoToIdentity(id);
+        ClientDetails clientByID = service.getClientByID(clientDetailsIdentity);
 
         ClientDetailsDTO clientDetailsDTO = mapper.clientDetailsEntityToDto(clientByID);
         return new ResponseEntity<>(clientDetailsDTO,HttpStatus.OK);

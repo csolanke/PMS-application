@@ -1,9 +1,12 @@
+
 package com.cds.org.controller;
 
 import com.cds.org.computation.DetermineTotalFundForPMS;
 import com.cds.org.dto.ClientDetailsDTO;
+import com.cds.org.dto.ClientDetailsIdentityDTO;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
+import com.cds.org.model.ClientDetailsIdentity;
 import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -81,24 +84,30 @@ public class PMSControllerTest {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(pmsController).build();
 
+        ClientDetailsIdentity id = new ClientDetailsIdentity();
+        id.setClientId(1l);
+        id.setClientName("chandra");
+        id.setClientEmailId("csolanke77@gmail.com");
+
         clientDetails = new ClientDetails();
-        clientDetails.setClientName("chandra");
-        clientDetails.setClientEmailId("csolanke77@gmail.com");
+        clientDetails.setId(id);
         clientDetails.setClientBrokerAccountName("Zerodha");
         clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
         clientDetails.setClientAddress("LakeMary");
-        clientDetails.setClientId(1l);
       //  clientDetails.setPmsPurchasedDate(LocalDate.of(2022,06,14));
         clientDetails.setPaymentMode("Online");
 
 
+        ClientDetailsIdentityDTO clientDetailsIdentityDTO = new ClientDetailsIdentityDTO();
+        clientDetailsIdentityDTO.setClientId(1l);
+        clientDetailsIdentityDTO.setClientEmailId("csolanke77@gmail.com");
+        clientDetailsIdentityDTO.setClientName("chandra");
+
         dto = new ClientDetailsDTO();
-        dto.setClientName("chandra");
-        dto.setClientEmailId("csolanke77@gmail.com");
+        dto.setId(clientDetailsIdentityDTO);
         dto.setClientBrokerAccountName("Zerodha");
         dto.setClientPortfolioAmount(BigDecimal.valueOf(900000));
         dto.setClientAddress("LakeMary");
-        dto.setClientId(1l);
         //dto.setPmsPurchasedDate(LocalDate.of(2022,06,13));
         dto.setPaymentMode("Online");
 
@@ -109,12 +118,14 @@ public class PMSControllerTest {
     public void testGetAllClients() throws Exception {
 
         ClientDetails clientDetails1 = new ClientDetails();
-        clientDetails1.setClientName("Bhagya");
-        clientDetails1.setClientEmailId("bhagya@gmail.com");
+        ClientDetailsIdentity id1 = new ClientDetailsIdentity();
+        id1.setClientId(2l);
+        id1.setClientName("Bhagya");
+        id1.setClientEmailId("bhagya@gmail.com");
+        clientDetails1.setId(id1);
         clientDetails1.setClientBrokerAccountName("Upstox");
         clientDetails1.setClientPortfolioAmount(BigDecimal.valueOf(600000));
         clientDetails1.setClientAddress("LakeMary");
-        clientDetails1.setClientId(2l);
         //clientDetails1.setPmsPurchasedDate(LocalDate.of(2022,06,13));
         clientDetails1.setPaymentMode("offline");
 
@@ -123,12 +134,16 @@ public class PMSControllerTest {
         clientDetailsList.add(clientDetails1);
 
         ClientDetailsDTO dto1 = new ClientDetailsDTO();
-        dto1.setClientName("Bhagya");
-        dto1.setClientEmailId("bhagya@gmail.com");
+
+        ClientDetailsIdentityDTO identityDTO = new ClientDetailsIdentityDTO();
+        identityDTO.setClientId(2l);
+        identityDTO.setClientName("Bhagya");
+        identityDTO.setClientEmailId("bhagya@gmail.com");
+
+
         dto1.setClientBrokerAccountName("Upstox");
         dto1.setClientPortfolioAmount(BigDecimal.valueOf(600000));
         dto1.setClientAddress("LakeMary");
-        dto1.setClientId(2l);
         //clientDetails1.setPmsPurchasedDate(LocalDate.of(2022,06,13));
         dto1.setPaymentMode("offline");
 
@@ -147,7 +162,6 @@ public class PMSControllerTest {
 
         Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(200);
         Assertions.assertThat(result.getResponse().getContentAsString()).contains("chandra");
-        Assertions.assertThat(result.getResponse().getContentAsString()).contains("Bhagya");
 
 
     }
@@ -156,16 +170,26 @@ public class PMSControllerTest {
     public void testGetClientDetailsByID() throws Exception {
 
         String mockedObjectToJson = mapToJSON(this .clientDetails);
-        Mockito.when(clientService.getClientByID(1l)).thenReturn(this.clientDetails);
+
+
+        ClientDetailsIdentity id = new ClientDetailsIdentity();
+        id.setClientId(1l);
+        id.setClientName("chandra");
+        id.setClientEmailId("csolanke77@gmail.com");
+
+
+        Mockito.when(clientService.getClientByID(id)).thenReturn(this.clientDetails);
 
         //try to improve this mocking later
         Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails)).thenReturn(dto);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/client/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/clientById")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(id).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        Assertions.assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo(mockedObjectToJson);
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
     }
 
@@ -212,3 +236,4 @@ public class PMSControllerTest {
     }
 
     }
+
