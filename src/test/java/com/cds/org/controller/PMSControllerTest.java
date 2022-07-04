@@ -7,6 +7,7 @@ import com.cds.org.dto.ClientDetailsIdentityDTO;
 import com.cds.org.mapper.PMSMapper;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.model.ClientDetailsIdentity;
+import com.cds.org.security.AuthenticationRequest;
 import com.cds.org.security.JwtUtil;
 import com.cds.org.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,10 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,14 +23,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,40 +35,40 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(value = PMSController.class)
+@RunWith(MockitoJUnitRunner.class)
 public class PMSControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper ;
+    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectWriter objectWriter =objectMapper.writer();
 
-    @MockBean
+    @Mock
     private ClientService clientService;
 
-    @MockBean
+    @Mock
     private PMSMapper pmsMapper;
 
     @InjectMocks
     private PMSController pmsController;
 
-    @MockBean
+    @Mock
     private DetermineTotalFundForPMS determineTotalFundForPMS;
 
-    @MockBean
+    @Mock
     JwtUtil jwtUtil;
 
-    @MockBean
+    @Mock
     AuthenticationManager authenticationManager;
 
-    @MockBean
+    @Mock
     UserDetailsService userDetailsService;
+
+    @Mock
+    UserDetails userDetails;
 
     private ClientDetails clientDetails;
     private ClientDetailsDTO dto;
@@ -147,9 +141,6 @@ public class PMSControllerTest {
         //clientDetails1.setPmsPurchasedDate(LocalDate.of(2022,06,13));
         dto1.setPaymentMode("offline");
 
-
-        String inputMockedtoString = mapToJSON(clientDetailsList);
-
         Mockito.when(clientService.getAllClients()).thenReturn(clientDetailsList);
 
         Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails)).thenReturn(dto);
@@ -169,19 +160,10 @@ public class PMSControllerTest {
     @Test
     public void testGetClientDetailsByID() throws Exception {
 
-        String mockedObjectToJson = mapToJSON(this .clientDetails);
-
-
         ClientDetailsIdentity id = new ClientDetailsIdentity();
         id.setClientId(1l);
         id.setClientName("chandra");
         id.setClientEmailId("csolanke77@gmail.com");
-
-
-        Mockito.when(clientService.getClientByID(id)).thenReturn(this.clientDetails);
-
-        //try to improve this mocking later
-        Mockito.when(pmsMapper.clientDetailsEntityToDto(clientDetails)).thenReturn(dto);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/clientById")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -217,8 +199,6 @@ public class PMSControllerTest {
     @Test
     public void testAddPMSClient() throws Exception {
 
-        Mockito.when(clientService.addClient(clientDetails)).thenReturn(clientDetails);
-
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/client")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clientDetails).getBytes(StandardCharsets.UTF_8))
@@ -229,11 +209,34 @@ public class PMSControllerTest {
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(201);
     }
 
+    @Test
+   public void testAuthenticateUserSuccessful() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest("Amey","password1");
+
+        Mockito.when(userDetailsService.loadUserByUsername("Amey")).thenReturn(userDetails );
+        Mockito.when(jwtUtil.generateToken(userDetails)).thenReturn("Bearer ywsjjkdhsjhjkhjkhjdshjkhjkdhsjkhjkz");
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authenticationRequest).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
+
+    }
+
    // this method converts object to json format
     private String mapToJSON(Object object) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(object);
     }
 
-    }
+
+
+
+
+}
 
