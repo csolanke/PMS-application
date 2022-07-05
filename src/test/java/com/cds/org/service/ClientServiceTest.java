@@ -86,5 +86,20 @@ import java.util.List;
 
     }
 
+    @Test(expected = ClientDetailsNotFoundException.class)
+    public void testGetClientByIdFailedCase() throws ClientDetailsNotFoundException {
+
+        ClientDetailsIdentity testId = new ClientDetailsIdentity();
+        testId.setClientName("abc");
+        testId.setClientEmailId("abc@gmail.com");
+
+        Mockito.when(clientService.getClientByID(testId))
+                .thenThrow(new ClientDetailsNotFoundException("ClientDetails with this Id does not exists"));
+
+        ClientDetails ClientDetailsById = clientService.getClientByID(testId);
+
+        Mockito.verify(clientDetailsDAO,Mockito.times(1)).getClientDetailsById(Mockito.any());
+    }
+
 }
 
