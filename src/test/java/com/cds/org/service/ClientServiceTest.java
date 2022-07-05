@@ -1,86 +1,90 @@
 
-
 package com.cds.org.service;
 
+import com.cds.org.exceptions.ClientDetailsNotFoundException;
 import com.cds.org.model.ClientDetails;
 import com.cds.org.model.ClientDetailsIdentity;
 import com.cds.org.persistence.ClientDetailsDAO;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-@DataJpaTest
-class ClientServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+ public class ClientServiceTest {
+
 
     @Mock
-  ClientService clientService;
+    private ClientDetailsDAO clientDetailsDAO;
 
-  @Mock
-    ClientDetailsDAO clientDetailsDAO;
+    private ClientService clientService;
+    private ClientDetailsIdentity id;
+    private ClientDetails clientDetails;
 
-    @AfterEach
-    void tearDown()
-    {
-      //  clientDetailsDAO.deleteAll();
+    @Before
+    public void setUp(){
+        MockitoAnnotations.initMocks(this);
+
+        clientService = new ClientService(this.clientDetailsDAO);
+
+        id = new ClientDetailsIdentity();
+        id.setClientId(1l);
+        id.setClientName("chandra");
+        id.setClientEmailId("csolanke77@gmail.com");
+
+        clientDetails = new ClientDetails();
+        clientDetails.setId(id);
+        clientDetails.setClientBrokerAccountName("ZeroBrane");
+        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
+        clientDetails.setClientAddress("LakeMary");
+        //  clientDetails.setPmsPurchasedDate(LocalDate.of(2022,06,14));
+        clientDetails.setPaymentMode("Online");
+    }
+
+   @Test
+    public void testAddClient() {
+
+      Mockito.when(clientService.addClient(Mockito.any())).thenReturn(clientDetails);
+
+       ClientDetails clientDetails = clientService.addClient(Mockito.any());
+
+       Mockito.verify(clientDetailsDAO,Mockito.times(1)).saveClientDetails(Mockito.any());
+       Assertions.assertThat(clientDetails.getClientAddress()).isEqualTo("LakeMary");
+       Assertions.assertThat(clientDetails).isNotNull();
     }
 
     @Test
-    void testAddClient() {
+   public  void testGetAllClients() {
 
-        clientService = new ClientService();
-        ClientDetails clientDetails = new ClientDetails();
+        Mockito.when(clientService.getAllClients()).thenReturn(Arrays.asList(clientDetails));
 
-        ClientDetailsIdentity Id = new ClientDetailsIdentity();
-        Id.setClientId(1L);
-        Id.setClientEmailId("csolanke77@gmail.com");
-        Id.setClientName("Chandra");
+        List<ClientDetails> allClients = clientService.getAllClients();
 
-        clientDetails.setId(Id);
-        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
-        clientDetails.setClientBrokerAccountName("Zerodha");
-        clientDetails.setPaymentMode("Online");
-        clientDetails.setClientAddress("LakeMary Florida");
-        clientDetails.setPmsPurchasedDate(LocalDate.of(2021,11,25));
-
-        clientDetailsDAO.saveClientDetails(clientDetails);
-
-        assertThat(clientDetails.getId().getClientName()
-        ).isEqualTo("Chandra");
-        assertThat(clientDetails).isNotNull();
+        Mockito.verify(clientDetailsDAO,Mockito.times(1)).getAllClientDetails();
+        Assertions.assertThat(allClients).hasSize(1).isNotNull();
     }
 
-    /*@Test
-    void testGetAllClients() {
+    @Test
+    public void testGetClientByID() throws ClientDetailsNotFoundException {
 
-        clientService = new ClientService(clientDetailsDAO);
+        Mockito.when(clientService.getClientByID(id)).thenReturn(clientDetails);
 
-        clientService = new ClientService(clientDetailsDAO);
-        ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClientId(1L);
-        clientDetails.setClientName("chandrakant");
-        clientDetails.setClientPortfolioAmount(BigDecimal.valueOf(900000));
-        clientDetails.setClientBrokerAccountName("Zerodha");
-        clientDetails.setPaymentMode("Online");
-        clientDetails.setClientEmailId("csolanke77@gmail.com");
-        clientDetails.setClientAddress("LakeMary Florida");
-        clientDetails.setPmsPurchasedDate(LocalDate.of(2021,11,25));
+        ClientDetails ClientDetailsById = clientService.getClientByID(id);
 
-        ClientDetails savedClientDetails = clientDetailsDAO.save(clientDetails);
+        Mockito.verify(clientDetailsDAO,Mockito.times(1)).getClientDetailsById(Mockito.any());
+        Assertions.assertThat(ClientDetailsById.getClientAddress()).isEqualTo("LakeMary");
+        Assertions.assertThat(ClientDetailsById.getPaymentMode()).isEqualTo("Online");
+        Assertions.assertThat(clientDetails).isNotNull();
 
+    }
 
-        Iterable<ClientDetails> allClients = clientDetailsDAO.findAll();
-
-        assertThat(allClients.iterator().hasNext()).isTrue();
-        assertThat(allClients).isNotNull();
-        assertThat(allClients).isInstanceOf(ArrayList.class);
-
-    }*/
 }
 

@@ -15,6 +15,10 @@ public class ClientService {
     @Autowired
     ClientDetailsDAO clientDetailsDAO;
 
+    ClientService(ClientDetailsDAO dao){
+        this.clientDetailsDAO =dao;
+    }
+
     public ClientDetails addClient(ClientDetails clientDetail) {
        return  this.clientDetailsDAO.saveClientDetails(clientDetail);
 
